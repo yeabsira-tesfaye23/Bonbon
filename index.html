@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNS Drugs — Exam Study Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0d0f1a;
+    --surface: #141726;
+    --surface2: #1c2035;
+    --border: #2a2f4a;
+    --accent: #4f8ef7;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --warn: #f59e0b;
+    --danger: #f87171;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --code-bg: #0a0c16;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── SPLASH SCREEN ── */
+  #splash {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #0d0f1a 0%, #1a0d2e 40%, #0d1a2e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    text-align: center;
+    padding: 32px;
+    overflow: hidden;
+  }
+  #splash::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(167,139,250,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(79,142,247,0.12) 0%, transparent 60%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+  .splash-content {
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+  }
+  .splash-emoji {
+    font-size: 64px;
+    margin-bottom: 20px;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  .splash-from {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 0.3s forwards;
+  }
+  .splash-name {
+    font-size: clamp(40px, 10vw, 80px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 20%, #a78bfa 60%, #4f8ef7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.5s forwards;
+  }
+  .splash-msg {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 36px;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.9s forwards;
+  }
+  .splash-msg strong {
+    color: var(--text);
+  }
+  .splash-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    padding: 14px 36px;
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 32px rgba(79,142,247,0.35);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 1.3s forwards;
+    letter-spacing: 0.5px;
+  }
+  .splash-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(79,142,247,0.5);
+  }
+  .splash-btn:active { transform: translateY(0); }
+  .splash-dots {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 48px;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 1.6s forwards;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .dot.active { background: var(--accent2); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  #splash.hide {
+    animation: splashOut 0.6s ease forwards;
+  }
+  @keyframes splashOut {
+    to { opacity: 0; transform: scale(1.03); pointer-events: none; }
+  }
+
+  /* ── MAIN CONTENT ── */
+  #main { display: none; }
+  #main.show { display: block; }
+
+  /* ── HEADER ── */
+  .hero {
+    background: linear-gradient(135deg, #0d0f1a 0%, #1a1040 50%, #0d1a2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 32px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(79,142,247,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(167,139,250,0.10) 0%, transparent 60%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.4);
+    color: var(--warn);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(24px, 5vw, 48px);
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 30%, #a78bfa 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+  .hero p { color: var(--muted); font-size: 14px; }
+  .hero-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+  .tag {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── NAV ── */
+  .nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 12px 14px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s;
+  }
+  .nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 48px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .section-num {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px; flex-shrink: 0;
+    color: #fff;
+  }
+  .section-title { font-size: 18px; font-weight: 700; color: #fff; }
+  .section-body { padding: 24px 28px; }
+
+  /* ── CONCEPT CARD ── */
+  .concept {
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+  }
+  .concept-q {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 13px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .concept-q::before { content: 'Q'; background: var(--accent); color: #fff; font-size: 10px; font-weight: 800; padding: 1px 5px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+  .concept-a { color: var(--text); font-size: 14px; }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.tip { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: #6ee7b7; }
+  .callout.warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
+  .callout.danger { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #fca5a5; }
+  .callout.info { background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.3); color: #93c5fd; }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 14px 0; }
+  th { background: var(--surface2); color: var(--accent); font-weight: 700; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .yes { color: var(--accent3); font-weight: 700; }
+  .no { color: var(--danger); font-weight: 700; }
+
+  /* ── CODE ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    margin: 12px 0;
+    color: #cdd6f4;
+  }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 12px; background: rgba(79,142,247,0.15); color: #93c5fd; padding: 1px 6px; border-radius: 4px; }
+
+  /* ── PILLS ── */
+  .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin: 2px;
+  }
+  .pill-blue { background: rgba(79,142,247,0.2); color: #93c5fd; border: 1px solid rgba(79,142,247,0.4); }
+  .pill-green { background: rgba(52,211,153,0.2); color: #6ee7b7; border: 1px solid rgba(52,211,153,0.4); }
+  .pill-purple { background: rgba(167,139,250,0.2); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.4); }
+  .pill-orange { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.4); }
+  .pill-red { background: rgba(248,113,113,0.2); color: #fca5a5; border: 1px solid rgba(248,113,113,0.4); }
+
+  h3 { font-size: 15px; font-weight: 700; color: var(--accent2); margin: 18px 0 10px; }
+  h4 { font-size: 13px; font-weight: 700; color: var(--warn); margin: 12px 0 6px; text-transform: uppercase; letter-spacing: 1px; }
+  ul, ol { padding-left: 20px; }
+  li { margin: 4px 0; font-size: 14px; }
+  p { margin: 8px 0; font-size: 14px; }
+  strong { color: #fff; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* ── MEMORY AID ── */
+  .memory {
+    background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(79,142,247,0.1));
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 13.5px;
+  }
+  .memory-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent2); margin-bottom: 6px; }
+
+  .output-block {
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--accent3);
+    margin: 8px 0;
+  }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SPLASH SCREEN -->
+<!-- ══════════════════════════════════════ -->
+<div id="splash">
+  <div class="splash-content">
+    <span class="splash-emoji">🧠</span>
+    <div class="splash-from">A study guide, made for you by a nickname you owe me</div>
+    <div class="splash-name">Hey,<br>BonBon </div>
+    <div class="splash-msg">
+      I put together this guide so you don't have to fight through 154 slides alone.<br>
+      <strong>Everything is here.</strong> The CNS, the drugs, the mechanisms, the SAR — all organized and clean.<br><br>
+      Go get that score. 🚀
+    </div>
+    <button class="splash-btn" onclick="enterGuide()">
+      Let's study 📖
+    </button>
+    <div class="splash-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- MAIN GUIDE -->
+<!-- ══════════════════════════════════════ -->
+<div id="main">
+
+<div class="hero">
+  <div class="hero-badge">⚡ Chapter 3 — Complete Guide</div>
+  <h1>Drugs Acting on the CNS</h1>
+  <p>Everything you need for your exam. Zero fluff. All answers.</p>
+  <div class="hero-tags">
+    <span class="tag">Sedative-Hypnotics</span>
+    <span class="tag">Anticonvulsants</span>
+    <span class="tag">Antipsychotics</span>
+    <span class="tag">Anxiolytics</span>
+    <span class="tag">CNS Stimulants</span>
+    <span class="tag">Antidepressants</span>
+    <span class="tag">Anti-Parkinson</span>
+    <span class="tag">Narcotic Analgesics</span>
+  </div>
+</div>
+
+<nav class="nav">
+  <a href="#s1">1. Introduction</a>
+  <a href="#s2">2. Neurotransmitters</a>
+  <a href="#s3">3. Sedative-Hypnotics</a>
+  <a href="#s4">4. Barbiturates</a>
+  <a href="#s5">5. Non-Barbiturates</a>
+  <a href="#s6">6. Anticonvulsants</a>
+  <a href="#s7">7. Antipsychotics</a>
+  <a href="#s8">8. Anxiolytics</a>
+  <a href="#s9">9. Muscle Relaxants</a>
+  <a href="#s10">10. CNS Stimulants</a>
+  <a href="#s11">11. Antidepressants</a>
+  <a href="#s12">12. Anti-Parkinson</a>
+  <a href="#s13">13. Narcotic Analgesics</a>
+  <a href="#cheat">⚡ Cheat Sheet</a>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 1: INTRODUCTION -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div class="section-title">Introduction — Drugs Affecting the CNS</div>
+  </div>
+  <div class="section-body">
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div><strong>Big Picture:</strong> CNS drugs affect the brain and spinal cord to alter consciousness, mood, movement, and perception. They don't cure — they control symptoms and manage disorders.</div>
+    </div>
+
+    <h3>What CNS Drugs Can Do</h3>
+    <ul>
+      <li>Provide <strong>sleep or sedation</strong></li>
+      <li><strong>Prevent epileptic seizures</strong> (anticonvulsants)</li>
+      <li><strong>Treat psychiatric disorders</strong> (antipsychotics, antidepressants)</li>
+      <li><strong>Relieve anxiety</strong> (anxiolytics)</li>
+      <li>Provide <strong>anesthesia</strong></li>
+      <li><strong>Suppress movement</strong> (muscle relaxants)</li>
+      <li><strong>Relieve pain</strong> (analgesics)</li>
+      <li><strong>Stimulate</strong> the CNS (stimulants)</li>
+    </ul>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Key Point:</strong> Most CNS drugs do NOT cure the underlying condition — they control symptoms. This is why long-term management and dosing compliance matter so much.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 2: NEUROTRANSMITTERS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div class="section-title">Neurotransmitters in the CNS</div>
+  </div>
+  <div class="section-body">
+
+    <div class="two-col">
+      <div>
+        <h3>⚡ Excitatory (EPSP)</h3>
+        <div class="callout tip">
+          <span class="callout-icon">➕</span>
+          <div><strong>Depolarizing</strong> — increases chance of Action Potential firing</div>
+        </div>
+        <ul>
+          <li>Major NTs: <strong>Glutamate, Aspartate</strong></li>
+          <li>Opens <strong>Na⁺ channels</strong> → Na⁺ influx</li>
+          <li>Depresses Cl⁻ influx or K⁺ efflux</li>
+          <li>Result: more <strong>positive charge inside</strong> neuron</li>
+        </ul>
+      </div>
+      <div>
+        <h3>🛑 Inhibitory (IPSP)</h3>
+        <div class="callout danger">
+          <span class="callout-icon">➖</span>
+          <div><strong>Hyperpolarizing</strong> — decreases chance of Action Potential firing</div>
+        </div>
+        <ul>
+          <li>Major NTs: <strong>GABA, Glycine</strong></li>
+          <li>Opens <strong>Cl⁻ channels</strong> → Cl⁻ influx</li>
+          <li>↑ K⁺ efflux</li>
+          <li>Result: <strong>hyperpolarization</strong> of postsynaptic neuron</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="memory">
+      <div class="memory-title">🧠 Key Interaction</div>
+      There is <strong>always interaction</strong> between excitatory and inhibitory neurons. Balance between them determines whether an action potential fires. CNS drug therapy often works by tipping this balance.
+    </div>
+
+    <h3>Neurotransmitter Deficiency Syndromes</h3>
+    <table>
+      <tr><th>Deficit</th><th>Result</th><th>Relevant Drug Class</th></tr>
+      <tr><td>↓ GABA activity</td><td>Seizures, anxiety</td><td>Benzodiazepines, Barbiturates, Anticonvulsants</td></tr>
+      <tr><td>↓ Dopamine (nigrostriatal)</td><td>Parkinson's disease</td><td>Levodopa, Dopamine agonists</td></tr>
+      <tr><td>↑ Dopamine (mesolimbic)</td><td>Schizophrenia</td><td>Antipsychotics (DA antagonists)</td></tr>
+      <tr><td>↓ Serotonin / Norepinephrine</td><td>Depression</td><td>SSRIs, TCAs, MAOIs</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 3: SEDATIVE-HYPNOTICS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div class="section-title">Sedative and Hypnotic Drugs</div>
+  </div>
+  <div class="section-body">
+
+    <div class="two-col">
+      <div class="concept">
+        <div class="concept-q">What is a sedative drug?</div>
+        <div class="concept-a">Provides a quieting effect with relaxation and rest — but <strong>not necessarily sleep</strong>.</div>
+      </div>
+      <div class="concept">
+        <div class="concept-q">What is a hypnotic drug?</div>
+        <div class="concept-a">Causes drowsiness and <strong>facilitates sleep initiation and maintenance</strong>. Also called "sleeping pills."</div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div><strong>No sharp distinction!</strong> These are <strong>dose-related</strong>: small dose = sedation → larger dose = hypnosis → still larger = surgical anesthesia.</div>
+    </div>
+
+    <h3>Additional Uses</h3>
+    <ul>
+      <li><span class="pill pill-blue">Anticonvulsant</span> <span class="pill pill-green">Muscle relaxant</span> <span class="pill pill-purple">Anti-anxiety</span></li>
+    </ul>
+
+    <h3>Characteristics of an IDEAL Sedative-Hypnotic</h3>
+    <table>
+      <tr><th>Property</th><th>Ideal Behavior</th></tr>
+      <tr><td>Onset</td><td>Induces sleep <strong>promptly</strong> after administration</td></tr>
+      <tr><td>Duration</td><td>Maintains sleep for adequate period without unwanted awakening</td></tr>
+      <tr><td>Sleep quality</td><td>Promotes sleep <strong>identical to natural sleep</strong></td></tr>
+      <tr><td>Aftereffects</td><td>Person feels refreshed; no daytime sedation or drowsiness</td></tr>
+      <tr><td>Respiratory</td><td>No respiratory depression even at high doses</td></tr>
+      <tr><td>Coordination</td><td>No impairment of coordination or psychomotor function</td></tr>
+      <tr><td>Chronic use</td><td>Does NOT lose efficacy; does NOT accumulate in body</td></tr>
+      <tr><td>Safety</td><td>Not harmful in overdose; no rebound insomnia on discontinuation</td></tr>
+      <tr><td>Interactions</td><td>No enzyme induction; no important drug interactions</td></tr>
+      <tr><td>Dependence</td><td>No abuse, addiction, tolerance, or dependence</td></tr>
+      <tr><td>Cost</td><td>Inexpensive</td></tr>
+    </table>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>No drug currently meets ALL of these ideal criteria. The search for the perfect sedative-hypnotic continues.</div>
+    </div>
+
+    <h3>Classification of Sedative-Hypnotics</h3>
+    <div class="two-col">
+      <div>
+        <h4>Barbiturates</h4>
+        <ul>
+          <li>5,5-disubstituted derivatives of barbituric acid</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Non-Barbiturates</h4>
+        <ul>
+          <li>Aldehydes (Chloral hydrate, Paraldehyde)</li>
+          <li>Acetylene derivatives</li>
+          <li>Amides and imides</li>
+          <li>Alcohols</li>
+          <li>Ureides</li>
+          <li><strong>Benzodiazepines</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 4: BARBITURATES -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div class="section-title">Barbiturates</div>
+  </div>
+  <div class="section-body">
+
+    <div class="concept">
+      <div class="concept-q">What are barbiturates and what is their mechanism of action?</div>
+      <div class="concept-a">CNS depressants that are 5,5-disubstituted derivatives of barbituric acid. They bind to <strong>GABA<sub>A</sub> receptors</strong>, opening Cl⁻ ion channels → hyperpolarization of the neuron → CNS depression.</div>
+    </div>
+
+    <h3>Clinical Uses</h3>
+    <ul>
+      <li><span class="pill pill-blue">Sedative</span> <span class="pill pill-green">Hypnotic</span> <span class="pill pill-purple">Anesthetic</span> <span class="pill pill-orange">Anticonvulsant</span></li>
+    </ul>
+
+    <h3>Factors Increasing Lipid Solubility (Important for SAR!)</h3>
+    <ul>
+      <li>Branching of alkyl chain</li>
+      <li>Unsaturation</li>
+      <li>Replacement of alkyl with cyclic or aromatic groups</li>
+      <li>Introduction of halogens</li>
+      <li><strong>Replacement of O at C2 with S</strong> → thiobarbiturates (extremely lipophilic → rapid onset, used as anesthetics, e.g. Thiopental)</li>
+    </ul>
+
+    <div class="memory">
+      <div class="memory-title">🧠 Lipophilicity = Crosses BBB Faster</div>
+      Higher lipid solubility → faster brain penetration → faster onset. Thiobarbiturates are so lipophilic they're used as anesthetics (not sedative-hypnotics).
+    </div>
+
+    <h3>SAR of Barbiturates — Key Rules</h3>
+    <table>
+      <tr><th>Modification</th><th>Effect</th></tr>
+      <tr><td>Barbituric acid (R1=R2=H)</td><td class="no">NOT active — must replace BOTH H at C5</td></tr>
+      <tr><td>Two ethyl groups at C5</td><td class="yes">Activity appears</td></tr>
+      <tr><td>Longer alkyl chain (up to 6C) at C5</td><td class="yes">Enhanced biological activity</td></tr>
+      <tr><td>Branched isomers (same C count)</td><td class="yes">Greater activity, shorter duration (e.g. Pentobarbital > Amobarbital)</td></tr>
+      <tr><td>Unsaturated chain at C5</td><td class="yes">Greater potency than saturated (same carbon count)</td></tr>
+      <tr><td>Alicyclic/aromatic substituents at C5</td><td class="yes">Greater potency than aliphatic</td></tr>
+      <tr><td>O at C2 → S (thiobarbiturate)</td><td class="yes">Quick onset, short duration</td></tr>
+      <tr><td>Adding 2nd S (2,4-dithio)</td><td class="no">Decreases potency</td></tr>
+      <tr><td>2,4,6-trithio derivative</td><td class="no">No activity</td></tr>
+      <tr><td>Polar groups on 5-alkyl (OH, NH₂, COOH…)</td><td class="no">Destroys potency</td></tr>
+      <tr><td>N-methylation (imide H)</td><td>Improves onset, decreases duration</td></tr>
+      <tr><td>Aromatic substituent at C5</td><td class="yes">Produces anticonvulsant activity</td></tr>
+    </table>
+
+    <h3>Principal Disadvantages of Barbiturates</h3>
+    <div class="callout danger">
+      <span class="callout-icon">❌</span>
+      <div>
+        <ul>
+          <li><strong>Physical dependence</strong></li>
+          <li><strong>Low therapeutic index</strong> (overdose risk, suicides)</li>
+          <li><strong>Suppresses REM sleep</strong></li>
+          <li><strong>Enzyme induction</strong> → increases metabolism of itself and other drugs → dose escalation needed</li>
+          <li>Urine alkalinization enhances elimination during overdose</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Salt Formation</h3>
+    <p>Barbiturates are <strong>weak acids</strong>. The 5,5-disubstituted derivatives react with NaOH to form water-soluble sodium salts. This is reversed if pH is adjusted from neutral to acidic → precipitation.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 5: NON-BARBITURATES -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div class="section-title">Non-Barbiturate Sedative-Hypnotics</div>
+  </div>
+  <div class="section-body">
+
+    <h3>Ureides</h3>
+    <ul>
+      <li>Acyl-derivatives of urea: <code>RCO–NH-CO-NH₂</code></li>
+      <li>Structural similarity to barbiturates</li>
+      <li>Only <strong>acetylcarbromal</strong> still available</li>
+      <li><strong>Prolonged use NOT recommended</strong> — in vivo release of bromine causes <strong>bromidism</strong></li>
+    </ul>
+
+    <h3>Aldehydes</h3>
+    <ul>
+      <li><strong>Chloral hydrate</strong> — acts via metabolite <strong>trichloroethanol</strong>; has barbiturate-like effects on GABA<sub>A</sub>; metabolized by oxidation to inactive <em>trichloroacetic acid</em></li>
+      <li><strong>Paraldehyde</strong> — cyclic trimer of acetaldehyde; strong odor detectable in expired air; used in <strong>delirium tremens</strong> in institutional settings</li>
+    </ul>
+
+    <h3>Alcohols — SAR for Hypnotic Activity</h3>
+    <table>
+      <tr><th>Modification</th><th>Effect</th></tr>
+      <tr><td>Increasing chain length</td><td class="yes">Activity increases, max at C8</td></tr>
+      <tr><td>Branching of chain</td><td class="yes">Increases activity (same carbon count)</td></tr>
+      <tr><td>Halogen replaces H in alkyl group</td><td class="yes">Increases activity</td></tr>
+      <tr><td>Carbamylation of alcohol</td><td class="yes">Increases potency; carbamate more resistant to metabolism than hydroxyl</td></tr>
+      <tr><td>Carbon type</td><td>Tertiary > Secondary > Primary in activity</td></tr>
+    </table>
+
+    <div class="memory">
+      <div class="memory-title">🧠 Remember</div>
+      <strong>Chlorobutanol</strong> and <strong>Ethchlorvynol</strong> are examples with tertiary alcohol + halogen. <strong>Ethinamate</strong> is a carbamate example. Parent compound of methocarbamol, <strong>guaifenesin</strong>, is used as an <em>expectorant</em>.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 6: ANTICONVULSANTS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div class="section-title">Anticonvulsants (Antiepileptics)</div>
+  </div>
+  <div class="section-body">
+
+    <h3>Key Definitions</h3>
+    <table>
+      <tr><th>Term</th><th>Definition</th></tr>
+      <tr><td><strong>Seizure</strong></td><td>Sudden, transitory, uncontrolled episodes of brain dysfunction from abnormal neuronal discharge, with motor, sensory, or behavioral changes</td></tr>
+      <tr><td><strong>Convulsion</strong></td><td>Involuntary spasmodic contractions of voluntary muscles (skeletal and facial)</td></tr>
+      <tr><td><strong>Epilepsy</strong></td><td>Chronic, recurrent seizures from sudden excessive electrical discharge from neurons of the cerebral cortex</td></tr>
+    </table>
+
+    <h3>Classification of Epileptic Seizures (ILAE)</h3>
+    <table>
+      <tr><th>Type</th><th>Description</th><th>Drug of Choice</th></tr>
+      <tr><td><strong>Generalized Tonic-Clonic</strong> (Grand mal)</td><td>Loss of consciousness + general muscle spasm 2–5 min; may stop breathing</td><td>Phenobarbital, Phenytoin</td></tr>
+      <tr><td><strong>Absence</strong> (Petit mal)</td><td>Brief loss of consciousness, no motor activity; common in children</td><td>Ethosuximide, Valproate, Carbamazepine</td></tr>
+      <tr><td><strong>Simple Focal</strong> (Jacksonian)</td><td>Begins locally; conscious maintained</td><td>Phenytoin, Carbamazepine</td></tr>
+      <tr><td><strong>Complex Focal</strong> (Psychomotor/Temporal lobe)</td><td>Impaired consciousness; automatisms</td><td>Carbamazepine, Valproate</td></tr>
+      <tr><td><strong>Unclassified</strong></td><td>Severe, high mortality — no time for categorization</td><td>—</td></tr>
+    </table>
+
+    <h3>Mechanism of Anticonvulsant Drug Action</h3>
+    <ul>
+      <li>Limiting the <strong>firing frequency</strong> of neurons</li>
+      <li>Inhibiting <strong>excitatory</strong> transmitter release</li>
+      <li>Blocking <strong>excitatory</strong> transmitter action</li>
+      <li><strong>Activating GABA receptors</strong></li>
+      <li><strong>Enhancing GABA action</strong></li>
+      <li>Inhibiting GABA uptake</li>
+      <li>Inhibiting GABA metabolism</li>
+    </ul>
+
+    <div class="callout danger">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>The wrong drug can be more harmful than beneficial!</strong> Correct diagnosis and seizure type identification is critical before prescribing.</div>
+    </div>
+
+    <hr class="divider">
+
+    <h3>Classification of Anticonvulsant Drugs</h3>
+    <p>Most anticonvulsants contain a <strong>ureide structure</strong>.</p>
+    <ul>
+      <li>Cyclic ureides and imides</li>
+      <li>Urea</li>
+      <li>Miscellaneous</li>
+    </ul>
+
+    <h3>SAR of Anticonvulsants — General Rules</h3>
+    <table>
+      <tr><th>Substituents at R' and R''</th><th>Activity</th></tr>
+      <tr><td>Both are <strong>lower alkyl</strong></td><td>Active against <strong>absence seizures</strong> (petit mal); NOT against tonic-clonic</td></tr>
+      <tr><td>One is an <strong>aryl group</strong></td><td>Active against <strong>tonic-clonic and partial</strong> seizures; NOT absence</td></tr>
+    </table>
+    <p>The <strong>imide hydrogen</strong> is involved in strong hydrogen bonding at the receptor — important for activity. The N–H is acidic due to flanking electron-withdrawing groups.</p>
+
+    <hr class="divider">
+    <h3>Hydantoins</h3>
+    <div class="concept">
+      <div class="concept-q">What are hydantoins and how do they work?</div>
+      <div class="concept-a">Five-membered heterocyclic rings (imidazolidinedione derivatives). <strong>Phenytoin</strong> is the prime example — blocks <strong>voltage-dependent Na⁺ channels</strong> and decreases glutamic acid release → anticonvulsant effect. At least one phenyl group is important for activity.</div>
+    </div>
+
+    <h3>Oxazolidinediones</h3>
+    <p>Similar to hydantoin but <strong>–NH replaced by O at C-1</strong>. Toxic → search for replacements led to succinimides.</p>
+
+    <h3>Succinimides</h3>
+    <div class="concept">
+      <div class="concept-q">What are succinimides used for?</div>
+      <div class="concept-a">Widely used for <strong>petit mal (absence) seizures</strong> — reduce frequency and raise seizure threshold. Three members: <strong>Phensuximide, Methsuximide, Ethosuximide</strong>. Formed by substituting the ring oxygen of oxazolidinediones with a methylene group.</div>
+    </div>
+
+    <h3>Miscellaneous Anticonvulsants</h3>
+    <table>
+      <tr><th>Drug</th><th>Mechanism</th></tr>
+      <tr><td><strong>Primidone</strong></td><td>Metabolized to <strong>phenobarbital</strong> — acts through its metabolite</td></tr>
+      <tr><td><strong>Valproic acid</strong></td><td>Blocks <strong>GABA transaminase</strong> → prevents GABA breakdown → ↑ GABA levels → alleviates seizure</td></tr>
+      <tr><td><strong>Vigabatrin (γ-Vinyl-GABA)</strong></td><td>Next-gen GABA-based anticonvulsant; also increases GABA</td></tr>
+      <tr><td><strong>Carbamazepine</strong></td><td>Blocks Na⁺ channels; used for partial and tonic-clonic seizures</td></tr>
+      <tr><td><strong>Clonazepam</strong></td><td>Benzodiazepine; GABA enhancer</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 7: ANTIPSYCHOTICS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <div class="section-title">Neuroleptics / Antipsychotics</div>
+  </div>
+  <div class="section-body">
+
+    <div class="concept">
+      <div class="concept-q">What is schizophrenia?</div>
+      <div class="concept-a">A mental disorder involving disruption and disintegration of behavior — the person cannot link thoughts and feelings to real life. Positive symptoms (hallucinations, delusions) + negative symptoms (social withdrawal, emotional flatness).</div>
+    </div>
+
+    <h3>Mechanism of Action</h3>
+    <ul>
+      <li>Block <strong>dopamine (D2) receptors</strong> in mesolimbic and mesocortical areas → tranquilizing effect</li>
+      <li>Block <strong>serotonin (5-HT₂) receptors</strong> (especially atypicals)</li>
+    </ul>
+
+    <h3>Important Dopaminergic Pathways</h3>
+    <table>
+      <tr><th>Pathway</th><th>Function</th><th>If Disrupted</th></tr>
+      <tr><td>Mesolimbic (VTA → nucleus accumbens)</td><td>"Reward" pathway; emotion</td><td>Positive symptoms of schizophrenia</td></tr>
+      <tr><td>Mesocortical (VTA → frontal cortex)</td><td>Motivation, emotional response</td><td>Negative symptoms of schizophrenia</td></tr>
+      <tr><td>Nigrostriatal (substantia nigra → striatum)</td><td>Voluntary movement coordination</td><td>Parkinsonian-like side effects</td></tr>
+      <tr><td>Tuberoinfundibular (hypothalamus → pituitary)</td><td>Hormone secretion (prolactin)</td><td>↑ Prolactin levels</td></tr>
+    </table>
+
+    <h3>Classification of Antipsychotics</h3>
+    <div class="two-col">
+      <div>
+        <h4>Typical (1st Generation)</h4>
+        <ul>
+          <li><strong>Phenothiazines</strong>: Chlorpromazine, Fluphenazine</li>
+          <li><strong>Thioxanthenes</strong>: Thiothixene, Chloroprothixene</li>
+          <li><strong>Butyrophenones</strong>: Haloperidol, Droperidol</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Atypical (2nd Generation)</h4>
+        <ul>
+          <li>Clozapine, Risperidone, Sulpiride</li>
+          <li>Dopamine partial agonists</li>
+          <li>Better for negative symptoms</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <h3>SAR — Phenothiazines</h3>
+    <table>
+      <tr><th>Modification</th><th>Effect</th></tr>
+      <tr><td>Electronegative group at X position (Cl, CF₃, SCH₃)</td><td class="yes">Increases activity; <strong>CF₃ gives greatest activity</strong></td></tr>
+      <tr><td>Electron-attracting group at position 2</td><td class="yes">Optimal (e.g., Chlorpromazine)</td></tr>
+      <tr><td>Nitrogen-containing side chain on ring N</td><td class="yes">Required for antipsychotic activity</td></tr>
+      <tr><td><strong>3-carbon chain</strong> between ring N and side chain N</td><td class="yes">Optimal for antipsychotic activity</td></tr>
+      <tr><td>2-carbon chain (instead of 3)</td><td class="no">Antihistaminic activity (not antipsychotic)</td></tr>
+      <tr><td>Side chain type: Piperazine</td><td class="yes">Highest activity among side chains</td></tr>
+      <tr><td>Large/polar groups on side chain (phenyl, dimethylamino, OH)</td><td class="no">Loss of tranquilizing activity</td></tr>
+      <tr><td>Substitution at positions 1 and 4</td><td class="no">Reduces antipsychotic activity</td></tr>
+      <tr><td>Substitution at position 3</td><td class="yes">Increases more than position 2</td></tr>
+    </table>
+
+    <div class="memory">
+      <div class="memory-title">🧠 Depot Formulations</div>
+      Phenothiazines with <strong>free OH groups → esterified → lipid soluble depot</strong>. I.M. injection creates oily depot, slowly releasing the prodrug. Used for <strong>long-term treatment</strong> and to reduce compliance problems. Example: Fluphenazine decanoate.
+    </div>
+
+    <h3>SAR — Thioxanthenes</h3>
+    <ul>
+      <li>No ring nitrogen (unlike phenothiazines)</li>
+      <li><strong>Cis-isomers MORE active</strong> than trans-isomers</li>
+      <li>Cis isomers are partly superimposable with dopamine → better fit to receptors</li>
+      <li>Saturation of side chain double bond → reduces cis-isomer activity</li>
+    </ul>
+
+    <h3>SAR — Butyrophenones</h3>
+    <table>
+      <tr><th>Feature</th><th>Rule</th></tr>
+      <tr><td>Fluorine at para position (X)</td><td class="yes">Usually present in most potent drugs</td></tr>
+      <tr><td>Tertiary amine at C4 of butyl chain</td><td class="yes">All butyrophenones have this</td></tr>
+      <tr><td>Propyl chain length</td><td>Lengthening, shortening, or branching all <span class="no">decrease potency</span></td></tr>
+      <tr><td>Ketone group</td><td class="yes">Essential for activity</td></tr>
+      <tr><td>Replace ketone with thioketone/phenoxy/OH</td><td class="no">Decreases potency</td></tr>
+      <tr><td>N in 6-membered ring (piperidine/piperazine)</td><td class="yes">No loss of potency</td></tr>
+    </table>
+
+    <div class="memory">
+      <div class="memory-title">🧠 Haloperidol Decanoate</div>
+      <strong>Haloperidol</strong>'s hydroxyl group is esterified with decanoic acid → <strong>Haloperidol decanoate</strong> prodrug. Long-acting I.M. injection — included in the national drug list along with fluphenazine decanoate.
+    </div>
+
+    <h3>Side Effects of Neuroleptics</h3>
+    <div class="callout danger">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>Extrapyramidal side effects</strong> — due to dopamine receptor antagonism in the <em>nigrostriatal pathway</em>:
+        <ul>
+          <li>Rigidity and tremor (Parkinsonism-like)</li>
+          <li>Continuous restless walking (akathisia)</li>
+          <li>Facial grimacing</li>
+          <li>Involuntary movements of face and extremities (tardive dyskinesia)</li>
+        </ul>
+        These effects <strong>increase with ↑ antidopaminergic : anticholinergic potency ratio</strong>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 8: ANXIOLYTICS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <div class="section-title">Anxiolytics (Minor Tranquilizers) — Benzodiazepines</div>
+  </div>
+  <div class="section-body">
+
+    <div class="concept">
+      <div class="concept-q">What are anxiolytics and their mechanism?</div>
+      <div class="concept-a">Used to control moderate-to-severe anxiety. Most widely used = <strong>Benzodiazepines</strong> (benzene fused to 7-membered diazepine ring). Mechanism: ↑ binding of GABA to GABA<sub>A</sub> receptor → promotes Cl⁻ influx → inhibition.</div>
+    </div>
+
+    <h3>Advantages of Benzodiazepines over Barbiturates</h3>
+    <table>
+      <tr><th>Property</th><th>Benzodiazepines</th><th>Barbiturates</th></tr>
+      <tr><td>Therapeutic index</td><td class="yes">Higher (safer)</td><td class="no">Low (overdose risk)</td></tr>
+      <tr><td>REM sleep suppression</td><td class="yes">Less</td><td class="no">Suppresses REM</td></tr>
+      <tr><td>Addiction potential</td><td class="yes">Lower</td><td class="no">Higher</td></tr>
+    </table>
+
+    <h3>Uses of Benzodiazepines</h3>
+    <ul>
+      <li><span class="pill pill-blue">Sedative-Hypnotic</span> <span class="pill pill-green">Anti-anxiety</span> <span class="pill pill-purple">Anticonvulsant</span> <span class="pill pill-orange">Muscle relaxant</span></li>
+    </ul>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>Benzodiazepines still have <strong>tolerance and dependence potential</strong>. Generally prescribed for <strong>brief periods only</strong>.</div>
+    </div>
+
+    <h3>SAR of Benzodiazepines</h3>
+    <table>
+      <tr><th>Position/Modification</th><th>Effect</th></tr>
+      <tr><td>Saturation of 4,5-double bond or shift to 3,4</td><td class="no">Decrease activity</td></tr>
+      <tr><td>Positions 6, 8, 9</td><td class="no">Should NOT be substituted</td></tr>
+      <tr><td>2-carbonyl group + N at position 1</td><td class="yes">Optimal for activity</td></tr>
+      <tr><td>Substituent on N-1</td><td>Must be <strong>small</strong></td></tr>
+      <tr><td>Phenyl at C-5</td><td class="yes">Promotes activity</td></tr>
+      <tr><td>Ortho or di-ortho substituent (electron-attracting)</td><td class="yes">Increases activity</td></tr>
+      <tr><td>Para substituents</td><td class="no">Decrease activity</td></tr>
+      <tr><td>Electron-attracting at C-7</td><td class="yes">Required; more electron-attracting = higher activity</td></tr>
+      <tr><td>Hydroxyl at C-3 (R2)</td><td>Pharmacokinetically important — makes it polar → readily excreted → <strong>short acting</strong></td></tr>
+      <tr><td>No OH at C-3</td><td>Non-polar, <strong>longer half-life</strong></td></tr>
+    </table>
+
+    <div class="memory">
+      <div class="memory-title">🧠 C-3 Hydroxyl = Short-Acting</div>
+      C-3 OH group → easily undergoes <strong>Phase II glucuronidation</strong> → water-soluble conjugate → rapidly excreted. Example: <strong>Oxazepam</strong> (half-life 4–15 hours).
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 9: MUSCLE RELAXANTS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <div class="section-title">Central Skeletal Muscle Relaxants</div>
+  </div>
+  <div class="section-body">
+
+    <div class="concept">
+      <div class="concept-q">How do central muscle relaxants work?</div>
+      <div class="concept-a">Act at the <strong>spinal cord</strong> — depress neuronal synapses and block nerve impulse conduction → relax skeletal muscle. Used for muscle spasticity.</div>
+    </div>
+
+    <h3>Drug Classes</h3>
+    <ul>
+      <li>Glycerol monoethers and analogues</li>
+      <li>Substituted alkanediols</li>
+      <li>Benzodiazepines</li>
+    </ul>
+
+    <h3>Glycerol Monoethers</h3>
+    <p><strong>Mephenesin</strong> is the prototype (O-tolyl ether of glycerol). Short duration, weakly active. Metabolized at primary alcohol → carboxylic acid. Carbamylation of this group increases activity.</p>
+
+    <table>
+      <tr><th>Drug</th><th>Key Feature</th></tr>
+      <tr><td><strong>Chlorophenesin carbamate</strong></td><td>Para-Cl group → ↑ lipid/water coefficient + blocks para hydroxylation; carbamate at primary alcohol</td></tr>
+      <tr><td><strong>Methocarbamol</strong></td><td>Ortho-methoxy group; parent compound = guaifenesin (used as expectorant)</td></tr>
+    </table>
+
+    <h3>Substituted Alkanediols</h3>
+    <ul>
+      <li><strong>Meprobamate</strong> and <strong>Carisoprodol</strong> (mono-N-isopropyl relative of meprobamate)</li>
+      <li>Used for acute muscle spasm from local trauma or strain</li>
+      <li>NOT effective for spasm from cerebral palsy or spinal cord injury</li>
+      <li>Major side effect: <strong>drowsiness</strong></li>
+    </ul>
+
+    <h3>Benzodiazepines as Muscle Relaxants</h3>
+    <ul>
+      <li><strong>Diazepam</strong>: binds GABA<sub>A</sub> as agonist → skeletal muscle relaxant; relieves spasticity in spinal cord lesions and cerebral palsy</li>
+      <li><strong>Baclofen</strong>: GABA structural analog; more lipophilic → crosses BBB; agonist at <strong>GABA<sub>B</sub> receptors</strong> → neuronal hyperpolarization → reduces excitatory NT release; as effective as diazepam</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 10: CNS STIMULANTS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <div class="section-title">CNS Stimulants</div>
+  </div>
+  <div class="section-body">
+
+    <h3>Uses</h3>
+    <ul>
+      <li>Treatment of depressive states</li>
+      <li>Maintenance of wakefulness/alertness</li>
+      <li>Recovery of consciousness</li>
+      <li>Restoration of respiration or blood pressure</li>
+    </ul>
+
+    <h3>Mechanisms</h3>
+    <ul>
+      <li>Selective <strong>blockade of neural inhibition</strong> (blockade of postsynaptic/presynaptic inhibition)</li>
+      <li><strong>Direct neural excitation</strong></li>
+    </ul>
+
+    <h3>Classification</h3>
+    <ul>
+      <li>General stimulants (Analeptics)</li>
+      <li>Methyl xanthines</li>
+      <li>Central sympathomimetic agents</li>
+      <li>Antidepressants</li>
+    </ul>
+
+    <hr class="divider">
+
+    <h3>General Stimulants (Analeptics)</h3>
+    <ul>
+      <li>Enhance response to sensory stimulation; accelerate return of normal reflexes after anesthesia</li>
+      <li>Also called <strong>respiratory stimulants</strong> — increase pulmonary ventilation</li>
+      <li>Common structural feature: <strong>diethylamine or similar moiety</strong></li>
+      <li>Most are obsolete; <code>diethylamide substitution of aromatic/heterocyclic acid</code> = only prerequisite</li>
+    </ul>
+
+    <h3>Methyl Xanthines</h3>
+    <div class="callout info">
+      <span class="callout-icon">☕</span>
+      <div>Includes naturally occurring <strong>Caffeine</strong>, <strong>Theophylline</strong>, and <strong>Theobromine</strong>. Caffeine is the most potent cerebral stimulant. Theophylline is used clinically as a bronchodilator.</div>
+    </div>
+
+    <p><strong>Mechanism:</strong> Inhibit <strong>phosphodiesterase</strong> → ↑ cAMP levels. Also antagonize adenosine at A1 receptors.</p>
+
+    <table>
+      <tr><th>Effect</th><th>Caffeine</th><th>Theophylline</th><th>Theobromine</th></tr>
+      <tr><td>CNS Stimulation</td><td class="yes">Most potent (1st)</td><td>2nd</td><td>3rd</td></tr>
+      <tr><td>Respiratory Stimulation</td><td>1st</td><td>2nd</td><td>3rd</td></tr>
+      <tr><td>Diuresis</td><td>3rd</td><td class="yes">Most potent (1st)</td><td>2nd</td></tr>
+      <tr><td>Coronary Dilation</td><td>3rd</td><td class="yes">1st</td><td>2nd</td></tr>
+      <tr><td>Cardiac Stimulation</td><td>3rd</td><td class="yes">1st</td><td>2nd</td></tr>
+      <tr><td>Skeletal Muscle</td><td>1st</td><td>2nd</td><td>3rd</td></tr>
+    </table>
+
+    <h3>Central Sympathomimetics (Psychomotor Stimulants)</h3>
+    <p>Structural modifications of peripheral sympathomimetics that make them more resistant to metabolism and more lipophilic → better BBB crossing → central activity.</p>
+
+    <h4>Amphetamine — SAR Rules</h4>
+    <table>
+      <tr><th>Modification</th><th>Effect</th></tr>
+      <tr><td>Dextro (d) isomer vs. levo</td><td class="yes">d-isomer more potent</td></tr>
+      <tr><td>α-Methyl substitution (phenylethylamine)</td><td class="yes">↑ activity + retards MAO metabolism</td></tr>
+      <tr><td>Increasing chain length</td><td class="no">Decreases activity</td></tr>
+      <tr><td>N in ring (phendimetrazine)</td><td class="yes">More resistant to enzymatic metabolism</td></tr>
+      <tr><td>Alkylation of N with group larger than methyl</td><td class="no">Decreases activity</td></tr>
+      <tr><td>Hydroxylation (ring or β-carbon)</td><td class="no">Decreases activity (↓ BBB crossing)</td></tr>
+      <tr><td>Saturation of benzene ring</td><td class="no">Decreases activity</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 11: ANTIDEPRESSANTS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s11">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <div class="section-title">Antidepressants</div>
+  </div>
+  <div class="section-body">
+
+    <div class="concept">
+      <div class="concept-q">What causes depression and how do antidepressants work?</div>
+      <div class="concept-a">Depression is due to <strong>low levels of monoamines (serotonin, norepinephrine)</strong> in the synapse. Antidepressants work by: (1) blocking NT reuptake, (2) inhibiting MAO (prevents NT breakdown), or (3) direct receptor action.</div>
+    </div>
+
+    <h3>Classification of Antidepressants</h3>
+
+    <h4>1. Tricyclic Antidepressants (TCAs)</h4>
+    <table>
+      <tr><th>Drug</th><th>Class</th><th>Notes</th></tr>
+      <tr><td>Imipramine</td><td>Dibenzazepine</td><td>Non-selective; blocks NE + 5-HT reuptake</td></tr>
+      <tr><td>Desipramine</td><td>Dibenzazepine</td><td>Demethylated metabolite of imipramine; less anticholinergic; more NE selective</td></tr>
+      <tr><td>Amitriptyline</td><td>Dibenzocycloheptadine</td><td>Related to thioxanthines (sulfur → ethylene bridge)</td></tr>
+      <tr><td>Nortriptyline</td><td>Dibenzocycloheptadine</td><td>Less anticholinergic, less sedative, more stimulant than amitriptyline</td></tr>
+    </table>
+
+    <p><strong>Structural difference from neuroleptics:</strong> TCAs are <strong>non-planar</strong> (ethylene bridge twists the ring) and <strong>asymmetrical</strong> with no electronegative ring substituents.</p>
+
+    <div class="memory">
+      <div class="memory-title">🧠 Bioisosteric Series (Remember This!)</div>
+      Imipramine → Amitriptyline: N replaced with C<br>
+      Amitriptyline → Doxepine: C replaced with O<br>
+      Doxepine → Dothiepin: O replaced with S
+    </div>
+
+    <h4>2. SSRIs (Selective Serotonin Reuptake Inhibitors)</h4>
+    <ul>
+      <li>Fluoxetine, Fluvoxamine, Paroxetine</li>
+      <li>Selectively block serotonin reuptake</li>
+      <li>Fewer side effects than TCAs</li>
+    </ul>
+
+    <h4>3. MAO Inhibitors (MAOIs)</h4>
+    <table>
+      <tr><th>Generation</th><th>Drug</th><th>Notes</th></tr>
+      <tr><td>1st Gen (non-selective)</td><td>Phenelzine, Tranylcypromine, Isocarboxazid</td><td>Hydrazine derivatives or cyclopropylamine; inhibit both MAO-A and MAO-B. Tranylcypromine has amphetamine-like stimulant properties.</td></tr>
+      <tr><td>2nd Gen (MAO-A selective)</td><td>Moclobemide (Aurorix, Manerix)</td><td>Reversible; selective for MAO-A → leaves liver MAO-B active → still detoxifies dietary tyramine. Safer food interaction profile.</td></tr>
+    </table>
+
+    <div class="callout danger">
+      <span class="callout-icon">❌</span>
+      <div><strong>MAOI Drawbacks:</strong> Potential toxicity, drug + dietary interactions. 1st-gen: hypotension, headache, anticholinergic effects (dry mouth, constipation, blurred vision), sedation.</div>
+    </div>
+
+    <h4>4. Miscellaneous Antidepressants</h4>
+    <p>Non-selective receptor-blocking effects, poorly understood mechanisms: <strong>mianserin, bupropion, trazodone</strong>.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 12: ANTI-PARKINSON -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s12">
+  <div class="section-header">
+    <div class="section-num">12</div>
+    <div class="section-title">Anti-Parkinsonian Agents</div>
+  </div>
+  <div class="section-body">
+
+    <div class="concept">
+      <div class="concept-q">What is Parkinson's disease?</div>
+      <div class="concept-a">A progressive degenerative disease involving <strong>degeneration of dopaminergic neurons in the nigrostriatal pathway</strong> → dopamine deficiency → unopposed cholinergic hyperactivity → tremor, rigidity, sluggish movement, postural instability.</div>
+    </div>
+
+    <div class="memory">
+      <div class="memory-title">🧠 The Core Imbalance</div>
+      Normal: Dopamine (inhibitory) ↔ Acetylcholine (excitatory) — BALANCED<br>
+      Parkinson's: ↓ Dopamine → ACh hyperactivity → motor symptoms<br>
+      Treatment goal: <strong>Restore the balance</strong> (↑ DA or ↓ ACh)
+    </div>
+
+    <h3>Two Types of Antiparkinsonian Agents</h3>
+
+    <h4>1. Anticholinergics</h4>
+    <p>Block excitatory cholinergic influence in basal ganglia. Atropine and scopolamine used historically. Newer agents: <strong>Benztropine, Trihexyphenidyl, Procyclidine</strong>.</p>
+
+    <h4>2. Dopaminergic Agents</h4>
+
+    <table>
+      <tr><th>Approach</th><th>Drug(s)</th><th>Mechanism</th></tr>
+      <tr>
+        <td><strong>Augment Dopamine Synthesis</strong></td>
+        <td>Levodopa (L-DOPA) + Carbidopa/Benserazide</td>
+        <td>L-DOPA = prodrug (dopamine can't cross BBB). Carbidopa/Benserazide = DOPA-decarboxylase inhibitors that <strong>don't cross BBB</strong> → prevent peripheral conversion → more L-DOPA reaches CNS → less dose needed, fewer peripheral side effects</td>
+      </tr>
+      <tr>
+        <td><strong>Inhibit MAO-B</strong></td>
+        <td>Selegiline</td>
+        <td>Selective MAO-B inhibitor → prevents dopamine breakdown selectively</td>
+      </tr>
+      <tr>
+        <td><strong>Stimulate DA Release</strong></td>
+        <td>Amantadine</td>
+        <td>↓ presynaptic DA re-uptake + ↑ DA synthesis and release. Basic amine; cage structure → lipophilic → crosses BBB → higher CNS DA concentration</td>
+      </tr>
+      <tr>
+        <td><strong>Direct DA Agonists</strong></td>
+        <td>Bromocriptine, Pergolide</td>
+        <td>Directly stimulate postsynaptic dopamine receptors. Independent of nigrostriatal degeneration. Used when L-DOPA fails at advanced stages.</td>
+      </tr>
+    </table>
+
+    <div class="callout danger">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>L-DOPA Side Effects:</strong> Psychosis, dyskinesia, erratic action, loss of efficacy with disease progression. Dopamine does NOT cross BBB (highly basic, protonated, destroyed by MAO) — that's why the prodrug L-DOPA is used.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 13: NARCOTIC ANALGESICS -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="s13">
+  <div class="section-header">
+    <div class="section-num">13</div>
+    <div class="section-title">Narcotic Analgesics (Opioids)</div>
+  </div>
+  <div class="section-body">
+
+    <div class="concept">
+      <div class="concept-q">What are opioid analgesics and how do they work?</div>
+      <div class="concept-a">Consist of natural opiate alkaloids and synthetic derivatives. Act by mimicking <strong>endogenous enkephalins and endorphins</strong> at CNS opiate receptors. Derived from opium (dried exudate of Papaver somniferum — poppy). Morphine is the most important.</div>
+    </div>
+
+    <h3>Effects of Opioids</h3>
+    <ul>
+      <li><span class="pill pill-green">Analgesia</span> <span class="pill pill-blue">Sedation</span> <span class="pill pill-purple">Euphoria</span> <span class="pill pill-red">Respiratory depression</span></li>
+      <li>Act peripherally as <strong>anti-diarrheic</strong></li>
+    </ul>
+
+    <h3>Classification of Opioid Analgesics</h3>
+    <ul>
+      <li>Morphine &amp; semi-synthetic derivatives</li>
+      <li>Morphinans</li>
+      <li>Benzomorphans</li>
+      <li>4-Phenylpiperidine derivatives</li>
+    </ul>
+
+    <h3>Morphine — Key Structure Facts</h3>
+    <ul>
+      <li><strong>Five fused rings</strong>, five chiral centers</li>
+      <li>Only the <strong>levo (–) form</strong> is naturally occurring and active</li>
+      <li>Dextro (+) isomer is inactive as analgesic</li>
+      <li>3–6× more potent I.M. than orally (first-pass 3-O-glucuronidation ↓ oral activity)</li>
+    </ul>
+
+    <h3>SAR of Morphine (Critical for Exam!)</h3>
+    <table>
+      <tr><th>Feature</th><th>Rule</th></tr>
+      <tr><td><strong>Phenolic OH (C3)</strong></td><td class="yes">Must be FREE for full analgesic activity. Masking it (methylation = codeine, acetylation = heroin) decreases activity</td></tr>
+      <tr><td>Aromatic ring</td><td class="yes">Very few active opiates exist without it</td></tr>
+      <tr><td>OH at C-6</td><td>Can be omitted OR replaced with ketone/methylene without losing potency</td></tr>
+      <tr><td>C7-C8 double bond</td><td>Not essential; can be eliminated (dihydromorphine)</td></tr>
+      <tr><td>Receptor binding stereochemistry</td><td class="yes">Stereospecific: (–) morphine active; (+) inactive</td></tr>
+      <tr><td>N-methyl substituent</td><td class="yes">Good agonist properties</td></tr>
+      <tr><td>Increasing N-substituent size (3–5C, allyl, cycloalkyl)</td><td>Converts to <strong>opioid antagonists</strong></td></tr>
+      <tr><td>Oxygen bridge (ring D)</td><td>NOT essential — morphinans (lacking it) retain analgesic activity</td></tr>
+    </table>
+
+    <h3>Morphine Analogues</h3>
+    <table>
+      <tr><th>Drug</th><th>Modification</th><th>Activity</th></tr>
+      <tr><td><strong>Codeine</strong></td><td>Methylation of phenolic OH → methyl morphine</td><td>~1/10 morphine potency; demethylated in vivo to morphine to be active; oral use</td></tr>
+      <tr><td><strong>Heroin</strong> (Diacetylmorphine)</td><td>Acetylation of phenolic OH → more lipophilic</td><td>Highly addictive; hydrolysis → morphine; withdrawn due to addiction; used in terminal cancer pain</td></tr>
+      <tr><td><strong>Hydromorphone</strong></td><td>C6-OH → ketone + saturate C7-C8</td><td>8–10× more potent than morphine</td></tr>
+      <tr><td><strong>Oxymorphone</strong></td><td>14β-OH added to hydromorphone</td><td>Low antitussive activity due to 14β-OH</td></tr>
+      <tr><td><strong>Hydrocodone</strong></td><td>Phenolic OH → OCH₃ in hydromorphone</td><td>Oral analgesic</td></tr>
+      <tr><td><strong>Oxycodone</strong></td><td>14β-OH added to hydrocodone</td><td>Moderate-to-severe pain</td></tr>
+    </table>
+
+    <h3>Morphinans</h3>
+    <p>Loss of 4,5-epoxide, C7-C8 double bond, and C6-OH from morphine structure. <strong>Levorphanol</strong> is ~6× more potent than morphine. (+)-Levarphanol (Dextrophan) = antitussive only (no analgesia — wrong stereochemistry).</p>
+
+    <h3>Benzomorphans</h3>
+    <p>Lack both epoxide ring (D) and ring C. <strong>Pentazocine</strong> = benzomorphan with mixed activity — weak µ-receptor antagonist, κ-receptor agonist. About 1/6 as potent as morphine parenterally.</p>
+
+    <h3>Opioid Antagonists</h3>
+    <div class="concept">
+      <div class="concept-q">How are opioid antagonists made?</div>
+      <div class="concept-a">Replace the N-methyl group with <strong>N-allyl</strong> (–NCH₂CH=CH₂) or <strong>N-cyclopropylmethyl</strong>. Used as antidotes to reverse opioid adverse effects: respiratory depression, cardiovascular effects, sedation.</div>
+    </div>
+
+    <div class="memory">
+      <div class="memory-title">🧠 Common Structural Features of Opioids</div>
+      All possess: <strong>Tertiary nitrogen</strong> + <strong>Quaternary carbon</strong> + <strong>Two-carbon separation</strong> between the two. This applies to Morphine, Morphinans, Benzomorphans, and Meperidine (4-phenylpiperidine).
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CHEAT SHEET -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="cheat">
+  <div class="section-header">
+    <div class="section-num" style="background:linear-gradient(135deg,#34d399,#059669)">⚡</div>
+    <div class="section-title">Quick Cheat Sheet — Last-Minute Review</div>
+  </div>
+  <div class="section-body">
+    <table>
+      <tr><th>Drug / Concept</th><th>Key One-Liner</th></tr>
+      <tr><td>Barbiturates MOA</td><td>Bind GABA<sub>A</sub> → open Cl⁻ channel → hyperpolarization</td></tr>
+      <tr><td>Barbiturates disadvantage</td><td>Low TI, physical dependence, REM suppression, enzyme induction</td></tr>
+      <tr><td>Thiopental</td><td>2-thioisoster of pentobarbital; ultra-lipophilic; IV anesthetic (NOT sleep)</td></tr>
+      <tr><td>Chloral hydrate</td><td>Acts via metabolite trichloroethanol; GABA<sub>A</sub> like barbiturates</td></tr>
+      <tr><td>Paraldehyde</td><td>Cyclic trimer of acetaldehyde; used in delirium tremens</td></tr>
+      <tr><td>Phenytoin</td><td>Blocks voltage-dependent Na⁺ channels; prime hydantoin; grand mal + partial</td></tr>
+      <tr><td>Ethosuximide</td><td>Succinimide; petit mal (absence) seizures only</td></tr>
+      <tr><td>Valproic acid</td><td>Blocks GABA transaminase → ↑ GABA → anti-seizure</td></tr>
+      <tr><td>Phenothiazines</td><td>D2 antagonists; 3-carbon chain = antipsychotic; 2-carbon chain = antihistamine</td></tr>
+      <tr><td>Cis vs. Trans (thioxanthenes)</td><td>Cis isomers more active — superimposable with dopamine</td></tr>
+      <tr><td>Butyrophenones</td><td>Para-F, ketone essential; propyl chain optimal; haloperidol = prototype</td></tr>
+      <tr><td>Benzodiazepines MOA</td><td>↑ GABA binding → Cl⁻ influx → CNS depression</td></tr>
+      <tr><td>C-3 OH benzos</td><td>Short-acting (Phase II glucuronidation → excretion) e.g. Oxazepam</td></tr>
+      <tr><td>Baclofen</td><td>GABA analog; GABA<sub>B</sub> agonist; crosses BBB (lipophilic); muscle relaxant</td></tr>
+      <tr><td>Caffeine potency rank</td><td>CNS: Caffeine > Theophylline > Theobromine</td></tr>
+      <tr><td>Theophylline potency rank</td><td>Diuresis/Coronary/Cardiac: Theophylline > Theobromine > Caffeine</td></tr>
+      <tr><td>Xanthine MOA</td><td>Inhibit phosphodiesterase → ↑ cAMP; antagonize adenosine (A1)</td></tr>
+      <tr><td>TCAs</td><td>Tricyclic, non-planar (twisted ring), asymmetrical; block NE + 5-HT reuptake</td></tr>
+      <tr><td>MAOIs 1st gen</td><td>Non-selective; phenelzine (hydrazine), tranylcypromine (stimulant-like)</td></tr>
+      <tr><td>Moclobemide</td><td>MAO-A selective; reversible; safer food/drug interactions</td></tr>
+      <tr><td>L-DOPA</td><td>Prodrug for dopamine; given with carbidopa (DOPA-decarboxylase inhibitor)</td></tr>
+      <tr><td>Amantadine</td><td>↑ DA synthesis/release; cage structure = lipophilic → crosses BBB</td></tr>
+      <tr><td>Selegiline</td><td>Selective MAO-B inhibitor → prevents DA breakdown</td></tr>
+      <tr><td>Morphine phenolic OH</td><td>FREE = active; masked (codeine/heroin) = decreased activity</td></tr>
+      <tr><td>Opioid antagonist trick</td><td>Replace N-CH₃ with N-allyl or N-cyclopropylmethyl → antagonist</td></tr>
+      <tr><td>Grand mal drugs</td><td>Phenobarbital, Phenytoin</td></tr>
+      <tr><td>Petit mal drugs</td><td>Ethosuximide, Valproate, Carbamazepine</td></tr>
+      <tr><td>GABA pathway</td><td>GABA<sub>A</sub> = Cl⁻ channel (barbiturates, benzos) | GABA<sub>B</sub> = K⁺/Ca²⁺ (baclofen)</td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /container -->
+</div><!-- /main -->
+
+<script>
+function enterGuide() {
+  const splash = document.getElementById('splash');
+  const main = document.getElementById('main');
+  splash.classList.add('hide');
+  setTimeout(() => {
+    splash.style.display = 'none';
+    main.classList.add('show');
+  }, 600);
+}
+</script>
+</body>
+</html> 
